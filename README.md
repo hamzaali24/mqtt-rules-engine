@@ -1,7 +1,7 @@
 # Winter-Supplement-Rules-Engine
 
 ## Description
-This project is aimed to communicates with the Winter Supplement web application to receive input data, processes the data, and publishes the output data to the MQTT output topic.
+This project is aimed to communicate with the Winter Supplement web application to receive input data, processes the data, and publishes the output data to the MQTT output topic.
 
 ## Prerequisites
 
