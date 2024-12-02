@@ -1,9 +1,6 @@
 import json
-import time
 import paho.mqtt.client as mqtt
-
-
-
+# import paho.mqtt.subscribe as subscribe
 
 
 # MQTT Broker details
@@ -18,64 +15,79 @@ input_topic = f"BRE/calculateWinterSupplementInput/{mqtt_topic_id}"
 output_topic = f"BRE/calculateWinterSupplementOutput/{mqtt_topic_id}"
 
 
-
-
-
-
-
-
-# Callback for when the client connects to the broker
-def on_connect(client, userdata, flags, rc, properties):
-    if rc == 0:
-        print(f"Connected to broker with result code {rc}. Subscribing to topic: {input_topic}")
-        try:
-            client.subscribe("BRE/calculateWinterSupplementInput/#")
-            print(f"Subscribed to topic: {input_topic}")
-        except:
-            print("Subscribing is not working.")
+def on_subscribe(client, userdata, mid, reason_code_list, properties):
+    # print(f"Subscribed with mid {mid} and QoS {reason_code_list}")
+    if reason_code_list[0].is_failure:
+        print(f"Broker rejected you subscription: {reason_code_list[0]}")
     else:
-        print(f"Failed to connect, return code {rc}")
+        print(f"Broker granted the following QoS: {reason_code_list[0].value}")
 
-# Callback for when a message is received
-def on_message(client, userdata, msg):
+
+def on_message(client, userdata, message):
+    print(f"Message received checkinggg")
+    print(f"Message received on topic {input_topic}")
+    print(f"Message payload: {message.payload}")
     try:
-        print("trying.......")
-        # Parse the JSON data from the message payload
-        coming_data = json.loads(msg.payload.decode())
-        print(coming_data)
-        # print("Received message:", data)
+        coming_data = json.loads(message.payload.decode())
+        print(f"Received input: {coming_data}")
         print(json.dumps(coming_data, indent=4))
+        
+        # output_data = {
+        #     "id": coming_data.id,
+        #     "isEligible": True,
+        #     "baseAmount": 300.0,
+        #     "childrenAmount": 200.0,
+        #     "supplementAmount": 500.0
+        #     }
+
+        
+        # output_topic = f"BRE/calculateWinterSupplementOutput/{output_topic}"
+        
+        # client.publish(output_topic, json.dumps(output_data))
+        # print(f"Published output: {output_data} to topic {output_topic}")
     except json.JSONDecodeError:
-        print("Failed to decode JSON:", msg.payload)
+        print("Failed to decode JSON:", message.payload)
+        
+
+def on_connect(client, userdata, flags, reason_code, properties):
+    if reason_code == 0:
+        print(f"Connected with result code {reason_code}")
+        try:
+            client.subscribe(input_topic)
+            print(f"Subscribed to {input_topic}")
+        except:
+            print(f"Can not subscribed to {input_topic}")
+    else:
+        print(f"Failed to connect: {reason_code}. loop_forever() will retry connection")
+        
 
 
-
-
-
-
-# Create the MQTT client
-# client = mqtt.Client()
-client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+try:
+    client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+    print("Connecting as mqtt client")
+except:
+    print("Can not connect as mqtt client")
 
 # Assign callbacks
 client.on_connect = on_connect
-client.on_message = on_message
+try:
+    client.on_message = on_message
+    print("Connecting to receive messages")
+except:
+    print("Can not connect and receive messages")
 
-
-
-# client.connect(broker_address, port, 60)
-
-client.connect("test.mosquitto.org", 1883, 60)
-
-# client.loop_forever()
-client.loop_start()
+# client.on_subscribe = on_subscribe
+try:
+    client.connect(broker_address, port, 60)
+    print("Connected to 1883")
+except:
+    print("Can not connect to 1883")
 
 try:
-    while True:
-        time.sleep(1)
+    client.loop_forever()
 except KeyboardInterrupt:
-    print("Stopping...")
-    client.loop_stop()
+    print("Disconnecting from broker")
+    client.disconnect()
 
 
 
@@ -123,3 +135,4 @@ except KeyboardInterrupt:
 
 #     else:
 #         print(f"ID: {id}, Not eligible for payment.")
+
