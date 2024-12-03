@@ -37,15 +37,15 @@ Follow these steps to set up the project locally:
 
    - on **Windows**
 
-   ```bash
-   python -m venv venv
-   ```
+     ```bash
+     python -m venv venv
+     ```
 
    - on **macOS**
 
-   ```bash
-   python3 -m venv venv
-   ```
+     ```bash
+     python3 -m venv venv
+     ```
 
 4. **Activate the virtual environment:**
 
@@ -53,15 +53,15 @@ Follow these steps to set up the project locally:
 
    - on **Windows**
 
-   ```bash
-   .\venv\Scripts\activate
-   ```
+     ```bash
+     .\venv\Scripts\activate
+     ```
 
    - on **macOS**
 
-   ```bash
-   source venv/bin/activate
-   ```
+     ```bash
+     source venv/bin/activate
+     ```
 
 5. **Install dependencies:**
 
@@ -97,3 +97,57 @@ Follow these steps to set up the project locally:
 ---
 
 By following this guide, you can set up, run, and test the Winter Supplement Rules Engine project.
+
+## Testing with MQTT Explorer
+
+If the provided input and output topics with mqtt topic id from winter supplement app do not work, you can use MQTT Explorer to test the application. Follow these steps:
+
+1. **Install MQTT Explorer**
+
+- Download and install [MQTT Explorer](https://mqtt-explorer.com/).
+
+2. **Create Custom Topics**  
+   In MQTT Explorer, enter host `test.mosquitto.org` and port number `1883`, then create custom input and output topics:
+
+   - **Input Topic:** `hamza/test/mqtt/input`
+   - **Output Topic:** `hamza/test/mqtt/output`
+
+3. **Test the Application**
+
+   1. **Start the Application:**  
+      Run the code with these values already implemented in the code:
+
+      ```bash
+      input_topic = "hamza/test/mqtt/input"
+      output_topic = "hamza/test/mqtt/output"
+      ```
+
+   2. **Publish Test Input in JSON format**  
+      In MQTT Explorer, publish a message to the input topic `hamza/test/mqtt/input`:
+
+      ```bash
+      {
+         "id": "59974c0c-b458-4421-875c-a37915448b0b",
+         "familyComposition": "single",
+         "numberOfChildren": 2,
+         "familyUnitInPayForDecember": true
+      }
+      ```
+
+   3. **Check Output**  
+      Check the output topic for the output data:  
+      **Expected Output:**
+
+      ```bash
+      {
+         "id": "59974c0c-b458-4421-875c-a37915448b0b",
+         "isEligible": true,
+         "baseAmount": 120.0,
+         "childrenAmount": 40.0,
+         "supplementAmount": 160.0
+      }
+      ```
+
+---
+
+By following testing steps, you can test and verify the application's functionality when the winter supplement app topics don't work.

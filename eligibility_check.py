@@ -3,13 +3,15 @@ import json
 def check_eligibility(data):
     """
     Function to determine the eligibility and calculate amounts based on input data.
+    Assuming all the input data values are valid and acceptable.
+    If any value is missing, the function will use default values.
     """
     
     # Extract the information from input data
     id = data.get("id")
     numberOfChildren = data.get("numberOfChildren", 0)
     familyComposition = data.get("familyComposition", "")
-    familyUnitInPayForDecember = data.get("familyUnitInPayForDecember")
+    familyUnitInPayForDecember = data.get("familyUnitInPayForDecember", False)
 
     if familyUnitInPayForDecember:
         """
