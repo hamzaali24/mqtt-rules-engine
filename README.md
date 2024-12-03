@@ -75,7 +75,7 @@ Follow these steps to set up the project locally:
 
    Edit `main.py` to set the `mqtt_topic_id` variable (line 11) with the correct MQTT topic ID provided by the Winter Supplement Calculator.
 
-7. **Run the application`**
+7. **Run the application**
 
    Start the project by running the `main.py` file.
 
@@ -83,20 +83,23 @@ Follow these steps to set up the project locally:
    python main.py
    ```
 
-8. **Check the Integration**
+8. **Check the integration**
 
    Use the Winter Supplement Calculator to send input data to the specified MQTT topic. The application will process the data and publish the output to the designated MQTT output topic.
 
-9. **Unit Test**  
+9. **Stop the application**  
+   To stop the code or prevent the client from further receiving messages, press `ctrl+C` (on Windows) or `cmd+C` (on macOS) in the terminal.
+
+10. **Unit Test**  
    To validate if eligibility functionality is working properly, run the following command in your terminal.
-   ```bash
-   python -m unittest discover
-   ```
-   This command will discover and execute all unit tests.
+      ```bash
+      python -m unittest discover
+      ```
+      This command will discover and execute all unit tests.
 
 ---
 
-By following this guide, you can set up, run, and test the Winter Supplement Rules Engine project.
+By following these steps, you can set up, run, and test the Winter Supplement Rules Engine project.
 
 ## Testing with MQTT Explorer
 
@@ -104,7 +107,7 @@ If the provided input and output topics with mqtt topic id from winter supplemen
 
 1. **Install MQTT Explorer**
 
-- Download and install [MQTT Explorer](https://mqtt-explorer.com/).
+   - Download and install [MQTT Explorer](https://mqtt-explorer.com/).
 
 2. **Create Custom Topics**  
    In MQTT Explorer, enter host `test.mosquitto.org` and port number `1883`, then create custom input and output topics:
